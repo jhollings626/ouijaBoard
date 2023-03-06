@@ -13,6 +13,8 @@ def SpeakText(command):
     engine.runAndWait()
 
 def askGPT(prompt): #pass prompt to ChatGPT and print response
+    prompt = prompt + ". 10 words maximum and maximize humor"
+    #print("Asked: ", prompt)
     response = bot.ask(prompt)
     split_response = response.split(':') #take big response with both replies and divide by colons
     finalResponse = split_response[2].strip() #take all information after the second colon as final response
@@ -20,7 +22,7 @@ def askGPT(prompt): #pass prompt to ChatGPT and print response
     SpeakText(finalResponse) #DEBUG: speak final repsonse, this is placeholder for spelling on the board
 
 def ouijaPrompt(): #pass Ouija jailbreak prompt to ChatGPT instance
-  with open('memoriesPrompt.txt', 'r', encoding="utf8") as file:
+  with open('ouijaPrompt.txt', 'r', encoding="utf8") as file:
     jailbreakPrompt = file.read().rstrip('\n') #store big character prompt in string
   response = bot.ask(jailbreakPrompt) #initialize "Ouija Mode" in ChatGPT by removing OpenAI restrictions
   #print(response) #verify that Ouija Mode has successfully been activated with print to console
