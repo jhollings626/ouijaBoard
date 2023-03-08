@@ -2,6 +2,7 @@
 
 import time
 import serial
+import string
 import re #pip install regex
 
 coords = {
@@ -20,9 +21,16 @@ time.sleep(5)
 ser.flushInput()
 
 def prepString(string): #prepare for sending over serial
+    string = removePunctuation(string)
     string.strip()
     string = string +'\n'
     string = bytes(string,encoding='utf8')
+    return string
+
+def removePunctuation(string):
+    string = string.translate(str.maketrans("", "", string.punctuation))
+    string = string.upper()
+    string = "".join(string.split())
     return string
 
 def cncHome(): #homing function
@@ -41,9 +49,10 @@ cncHome() #home CNC on startup
 
 while(True):
     funnyString = input("WORD TO SPELL: ")
+    funnyString = removePunctuation(funnyString)
     for char in funnyString:
         gcode = coords[char] #grab coordinates of char from dict
-        og = gcode #for printing not bytes
+        og = gcode #for printing GCODE not bytes so user know where machine going
         gcode = prepString(gcode)
         ser.write(gcode) #send gcode for character to machine
-        print("GCODE SENT: " + og)
+        print("GCODE SENT for: " + char + ": " + og)
