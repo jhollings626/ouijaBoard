@@ -4,7 +4,7 @@ import pyttsx3
 
 r = sr.Recognizer() #initialize speech recognition object
 bot = ChatGPT() #initialize ChatGPT object that will retrieve answers
-vosk = True #adjust based on which recognizer is being used
+vosk = False #adjust based on which recognizer is being used
 
 
 def SpeakText(command):
@@ -34,7 +34,7 @@ while(1): #wait for user to speak
         with sr.Microphone() as source2:
             r.adjust_for_ambient_noise(source2, duration = 0.2)
             audio2 = r.listen(source2)
-            vtt = r.recognize_vosk(audio2) #can switch vosk to google, but only 50 calls/day
+            vtt = r.recognize_google(audio2) #can switch vosk to google, but only 50 calls/day
             vtt = vtt.lower()
             
             if vosk:

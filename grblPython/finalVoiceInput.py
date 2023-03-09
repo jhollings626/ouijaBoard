@@ -50,7 +50,7 @@ time.sleep(5)
 ser.flushInput()
 r = sr.Recognizer() #initialize speech recognition object
 bot = ChatGPT() #initialize ChatGPT object that will retrieve answers
-vosk = True #adjust based on which recognizer is being used
+vosk = False #adjust based on which recognizer is being used
 
 
 def SpeakText(command):
@@ -112,18 +112,38 @@ cncHome()
 
 ouijaPrompt() #put chatgpt in Ouija mode
 while(1): #wait for user to speak
-    prompt = input("prompt: ")
-    parsedHeard = prompt.lower()
-    print("formatted: ", parsedHeard)
-    gptResponse = askGPT(parsedHeard) #set gptResponse to chatGPT's final response
-    gptResponse = removePunctuation(gptResponse) #prepare GPT response for formatting
-    for char in gptResponse:
-       gcode = coords[char] #grab coordinates of char from dict
-       og = gcode
-       gcode.strip()
-       gcode = gcode + '\n'
-       gcode = bytes(gcode,encoding='utf8')
-       og = gcode #for printing GCODE not bytes so user know where machine going
-       ser.write(gcode) #send gcode for character to machine
-       #what print("GCODE SENT for: " + char + ": " + og)
-       time.sleep(5)
+    try:
+
+        with sr.Microphone() as source2:
+            r.adjust_for_ambient_noise(source2, duration = 0.2)
+            audio2 = r.listen(source2)
+            vtt = r.recognize_google(audio2) #can switch vosk to google, but only 50 calls/day
+            vtt = vtt.lower()
+            
+            if vosk:
+                parsedHeard = vtt.split('"')[3] #remove additional formatting when vosk recognition is used
+            else:
+                parsedHeard = vtt
+
+            print("Unformatted: ", vtt)
+            print("Formatted: ", parsedHeard) #print prompt that will be passed to ChatGPT
+
+            parsedHeard = parsedHeard.lower()
+            gptResponse = askGPT(parsedHeard) 
+            gptResponse = removePunctuation(gptResponse)
+            for char in gptResponse:
+                gcode = coords[char] #grab coordinates of char from dict
+                og = gcode
+                gcode.strip()
+                gcode = gcode + '\n'
+                gcode = bytes(gcode,encoding='utf8')
+                og = gcode #for printing GCODE not bytes so user know where machine going
+                ser.write(gcode) #send gcode for character to machine
+                #what print("GCODE SENT for: " + char + ": " + og)
+                time.sleep(5)
+
+    except sr.RequestError as e:
+        print ("could not request resulst; [0]".format(e))
+
+    except sr.UnknownValueError:
+        print("unknown error occurred")

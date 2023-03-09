@@ -34,4 +34,4 @@ while(1): #wait for user to speak
     prompt = input("prompt: ")
     parsedHeard = prompt.lower()
     print("formatted: ", parsedHeard)
-    askGPT(parsedHeard) 
+    askGPT(parsedHeard)
