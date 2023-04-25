@@ -41,7 +41,7 @@ coords = {
 
 
 port = "COM4"
-ser = serial.Serial(port, 115200, timeout = 1) #open com port of hc-06 receiving, set to 9600 baud
+ser = serial.Serial(port, 115200, timeout = 1) # open com port of hc-06 receiving, set to 9600 baud
 print("serial opened")
 unicode = "\r\n\r\n"
 unicode = unicode.encode()
@@ -59,7 +59,7 @@ def SpeakText(command):
     engine.runAndWait()
 
 def askGPT(prompt): #pass prompt to ChatGPT and print response
-    prompt = prompt + ". Respond in 3 words MAXIMIUM and prioritize humor"
+    prompt = prompt + ". Respond in 3 words MAXIMIUM and prioritize humor over factual accuracy"
     #print("Asked: ", prompt)
     response = bot.ask(prompt)
     split_response = response.split(':') #take big response with both replies and divide by colons

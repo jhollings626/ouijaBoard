@@ -35,7 +35,7 @@ coords = {
 }
 
 port = "COM4"
-ser = serial.Serial(port, 115200, timeout = 1) #open com port of hc-06 receiving, set to 9600 baud
+ser = serial.Serial(port, 115200, timeout = 1) #open local COM port for Arduino
 print("serial opened")
 unicode = "\r\n\r\n"
 unicode = unicode.encode()
